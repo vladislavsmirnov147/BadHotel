@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BadHotel.Core/BadHotel.Core.csproj" />
+  <Project Path="BadHotel.Wpf/BadHotel.Wpf.csproj" />
+</Solution>
