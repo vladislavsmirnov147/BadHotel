@@ -2,150 +2,176 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Bad Hotel"
-        Height="720"
-        Width="900"
+        Height="760"
+        Width="950"
         WindowStartupLocation="CenterScreen">
 
-	<Grid Margin="20">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="170"/>
-		</Grid.RowDefinitions>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="170"/>
+        </Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0"
+        <TextBlock Grid.Row="0"
                    Text="BAD HOTEL"
                    FontSize="30"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,20"/>
 
-		<StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
-                    Margin="0,0,0,20">
+                    Margin="0,0,0,10">
 
-			<TextBlock Text="Name:"
+            <TextBlock Text="Name:"
                        VerticalAlignment="Center"
                        Margin="5"/>
 
-			<TextBox x:Name="NameTextBox"
-                     Width="160"
-                     Margin="5"/>
+            <TextBox Width="160"
+                     Margin="5"
+                     Text="{Binding NewWorkerName, UpdateSourceTrigger=PropertyChanged}"/>
 
-			<TextBlock Text="Worker type:"
+            <TextBlock Text="Worker type:"
                        VerticalAlignment="Center"
                        Margin="5"/>
 
-			<ComboBox x:Name="WorkerTypeComboBox"
-                      Width="150"
-                      Margin="5">
-				<ComboBoxItem Content="Receptionist"/>
-				<ComboBoxItem Content="Cleaner"/>
-				<ComboBoxItem Content="Cook"/>
-			</ComboBox>
+            <ComboBox Width="150"
+                      Margin="5"
+                      ItemsSource="{Binding WorkerTypes}"
+                      SelectedItem="{Binding SelectedWorkerType}"/>
 
-			<Button Content="Add worker"
+            <Button Content="Add worker"
                     Width="100"
                     Margin="5"
-                    Click="AddWorkerButton_Click"/>
-		</StackPanel>
+                    Command="{Binding AddCommand}"/>
+        </StackPanel>
 
-		<Grid Grid.Row="2">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="2*"/>
-			</Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,10">
 
-			<GroupBox Header="Hotel workers"
+            <TextBlock Text="Repository:"
+                       VerticalAlignment="Center"
+                       Margin="5"/>
+
+            <ComboBox Width="130"
+                      Margin="5"
+                      ItemsSource="{Binding RepositoryTypes}"
+                      SelectedItem="{Binding SelectedRepository}"/>
+
+            <TextBlock Text="Search:"
+                       VerticalAlignment="Center"
+                       Margin="10,5,5,5"/>
+
+            <TextBox Width="180"
+                     Margin="5"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <CheckBox Content="Sort A-Z"
+                      VerticalAlignment="Center"
+                      Margin="15,5,5,5"
+                      IsChecked="{Binding SortByName}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0"
+                      Header="Hotel workers"
                       Margin="5">
 
-				<ListBox x:Name="WorkersListBox"
-                         Margin="10"
-                         SelectionChanged="WorkersListBox_SelectionChanged">
+                <ListBox Margin="10"
+                         ItemsSource="{Binding DisplayedWorkers}"
+                         SelectedItem="{Binding SelectedWorker}">
 
-					<ListBox.ItemTemplate>
-						<DataTemplate>
-							<StackPanel Margin="3">
-								<TextBlock Text="{Binding Name}"
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="3">
+                                <TextBlock Text="{Binding Name}"
                                            FontWeight="Bold"/>
-								<TextBlock Text="{Binding Energy, StringFormat=Energy: {0}/100}"
+                                <TextBlock Text="{Binding Energy, StringFormat=Energy: {0}/100}"
                                            FontSize="12"/>
-							</StackPanel>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
 
-				</ListBox>
-			</GroupBox>
+                </ListBox>
+            </GroupBox>
 
-			<GroupBox Grid.Column="1"
+            <GroupBox Grid.Column="1"
                       Header="Selected worker"
                       Margin="5">
 
-				<StackPanel Margin="15">
+                <StackPanel Margin="15">
 
-					<TextBlock Text="Name:"
+                    <TextBlock Text="Name:"
                                FontWeight="Bold"/>
 
-					<TextBlock x:Name="SelectedNameText"
-                               Text="No worker selected"
+                    <TextBlock Text="{Binding SelectedWorker.Name, TargetNullValue=No worker selected}"
                                FontSize="18"
                                Margin="0,3,0,10"/>
 
-					<TextBlock Text="Type:"
+                    <TextBlock Text="Energy:"
                                FontWeight="Bold"/>
 
-					<TextBlock x:Name="SelectedTypeText"
-                               Text="-"
-                               FontSize="16"
-                               Margin="0,3,0,10"/>
-
-					<TextBlock Text="Energy:"
-                               FontWeight="Bold"/>
-
-					<TextBlock x:Name="SelectedEnergyText"
-                               Text="-"
+                    <TextBlock Text="{Binding SelectedWorker.Energy, StringFormat={}{0}/100, TargetNullValue=-}"
                                Margin="0,3,0,5"/>
 
-					<ProgressBar x:Name="EnergyProgressBar"
-                                 Minimum="0"
+                    <ProgressBar Minimum="0"
                                  Maximum="100"
                                  Height="25"
-                                 Value="0"
+                                 Value="{Binding SelectedWorker.Energy}"
                                  Margin="0,0,0,15"/>
 
-					<Button Content="Work"
+                    <Button Content="Work"
                             Height="35"
                             Margin="0,5"
-                            Click="WorkButton_Click"/>
+                            Command="{Binding WorkCommand}"/>
 
-					<Button Content="Special ability"
+                    <Button Content="Special ability"
                             Height="35"
                             Margin="0,5"
-                            Click="SpecialAbilityButton_Click"/>
+                            Command="{Binding SpecialAbilityCommand}"/>
 
-					<Button Content="CRAZY ACTION!"
+                    <Button Content="CRAZY ACTION!"
                             Height="35"
                             Margin="0,5"
-                            Click="CrazyActionButton_Click"/>
+                            Command="{Binding CrazyActionCommand}"/>
 
-					<Button Content="Remove worker"
+                    <Button Content="Remove worker"
                             Height="35"
                             Margin="0,5"
-                            Click="RemoveWorkerButton_Click"/>
+                            Command="{Binding RemoveCommand}"/>
 
-				</StackPanel>
-			</GroupBox>
-		</Grid>
+                </StackPanel>
+            </GroupBox>
 
-		<GroupBox Grid.Row="3"
+            <GroupBox Grid.Column="2"
+                      Header="Worker summary"
+                      Margin="5">
+
+                <ListBox Margin="10"
+                         ItemsSource="{Binding WorkerSummary}"/>
+
+            </GroupBox>
+        </Grid>
+
+        <GroupBox Grid.Row="4"
                   Header="Activity log"
                   Margin="5">
 
-			<ListBox x:Name="ActivityLogListBox"
-                     Margin="10"/>
-		</GroupBox>
+            <ListBox Margin="10"
+                     ItemsSource="{Binding ActivityLog}"/>
+        </GroupBox>
 
-	</Grid>
+    </Grid>
 </Window>
